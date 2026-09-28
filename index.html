@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyLifeWork</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>MyLifeWork</h1>
+    <p>Rutina, disciplina y trabajo, día a día.</p>
+  </header>
+
+  <main>
+    <section id="gastos">
+      <h2>Gastos del mes</h2>
+
+      <div class="total">
+        <span>Total del mes</span>
+        <strong id="total">$0</strong>
+      </div>
+
+      <form id="form-gasto">
+        <input type="text" id="descripcion" placeholder="Descripción (ej: Supermercado)" required>
+        <input type="number" id="monto" placeholder="Monto" min="0" step="0.01" required>
+        <select id="categoria">
+          <option>Comida</option>
+          <option>Transporte</option>
+          <option>Servicios</option>
+          <option>Ocio</option>
+          <option>Otros</option>
+        </select>
+        <button type="submit">Agregar gasto</button>
+      </form>
+
+      <ul id="lista-gastos"></ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

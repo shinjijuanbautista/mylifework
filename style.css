@@ -1,0 +1,196 @@
+/* ===== Colores del sitio (se cambian acá y afectan todo) ===== */
+:root {
+  --azul-oscuro: #0b2d4a;
+  --azul-medio: #2f7fbf;
+  --azul-claro: #b7d7ee;
+  --fondo: #e7f2f8;
+  --blanco: #fdfdfc;
+  --texto: #2b2b2b;
+  --gris: #777;
+  --rojo: #b23a48;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: var(--fondo);
+  color: var(--texto);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+/* ===== Encabezado ===== */
+header {
+  background-color: var(--azul-oscuro);
+  color: var(--blanco);
+  text-align: center;
+  padding: 45px 20px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.4rem;
+  letter-spacing: 1px;
+}
+
+header p {
+  margin: 10px 0 0;
+  color: var(--azul-claro);
+}
+
+/* ===== Contenido ===== */
+main {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+section {
+  background-color: var(--blanco);
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(11, 45, 74, 0.08);
+}
+
+section h2 {
+  margin-top: 0;
+  color: var(--azul-oscuro);
+}
+
+/* ===== Total ===== */
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--azul-oscuro);
+  color: var(--blanco);
+  padding: 18px 22px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.total strong {
+  font-size: 1.8rem;
+}
+
+/* ===== Formulario ===== */
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--azul-claro);
+}
+
+form input,
+form select {
+  padding: 11px;
+  border: 1px solid var(--azul-claro);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  background-color: var(--blanco);
+}
+
+form input:focus,
+form select:focus {
+  outline: none;
+  border-color: var(--azul-medio);
+  box-shadow: 0 0 0 3px rgba(47, 127, 191, 0.25);
+}
+
+form input[type="text"] {
+  flex: 2;
+  min-width: 180px;
+}
+
+form input[type="number"] {
+  flex: 1;
+  min-width: 100px;
+}
+
+form button {
+  background-color: var(--azul-oscuro);
+  color: var(--blanco);
+  border: none;
+  padding: 11px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+form button:hover {
+  background-color: var(--azul-medio);
+}
+
+/* ===== Lista de gastos ===== */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 8px;
+  border-bottom: 1px solid var(--fondo);
+  border-radius: 6px;
+  transition: background-color 0.15s;
+}
+
+li:hover {
+  background-color: var(--fondo);
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+li small {
+  display: block;
+  color: var(--gris);
+  margin-top: 2px;
+}
+
+li span {
+  margin-right: 14px;
+  font-weight: bold;
+  color: var(--azul-oscuro);
+}
+
+.borrar {
+  background: none;
+  border: none;
+  color: #a9b8c4;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+.borrar:hover {
+  color: var(--rojo);
+}
+
+/* ===== Celulares ===== */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.9rem;
+  }
+
+  section {
+    padding: 20px;
+  }
+
+  form button {
+    width: 100%;
+  }
+}
