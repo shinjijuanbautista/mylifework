@@ -194,3 +194,52 @@ li span {
     width: 100%;
   }
 }
+
+
+/* ===== Login ===== */
+.oculto {
+  display: none !important;
+}
+
+form input[type="email"],
+form input[type="password"] {
+  flex: 1 1 100%;
+  min-width: 180px;
+}
+
+.error {
+  color: var(--rojo);
+  min-height: 1.4em;
+  margin: 0 0 10px;
+}
+
+.auth-cambio {
+  margin: 0;
+  color: var(--gris);
+}
+
+.auth-cambio a {
+  color: var(--azul-medio);
+  font-weight: bold;
+}
+
+#usuario-barra {
+  margin-top: 16px;
+  color: var(--azul-claro);
+  font-size: 0.9rem;
+}
+
+#usuario-barra button {
+  margin-left: 10px;
+  background: transparent;
+  color: var(--blanco);
+  border: 1px solid var(--azul-claro);
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#usuario-barra button:hover {
+  background: var(--azul-medio);
+}

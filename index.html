@@ -10,10 +10,28 @@
   <header>
     <h1>MyLifeWork</h1>
     <p>Rutina, disciplina y trabajo, día a día.</p>
+    <div id="usuario-barra" class="oculto">
+      <span id="usuario-email"></span>
+      <button id="btn-salir" type="button">Salir</button>
+    </div>
   </header>
 
   <main>
-    <section id="gastos">
+    <section id="auth">
+      <h2 id="auth-titulo">Iniciar sesión</h2>
+      <form id="form-auth">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Contraseña (mínimo 6 caracteres)" minlength="6" required>
+        <button type="submit" id="auth-boton">Entrar</button>
+      </form>
+      <p id="auth-error" class="error"></p>
+      <p class="auth-cambio">
+        <span id="auth-texto">¿No tenés cuenta?</span>
+        <a href="#" id="auth-cambiar">Registrate</a>
+      </p>
+    </section>
+
+    <section id="gastos" class="oculto">
       <h2>Gastos del mes</h2>
 
       <div class="total">
@@ -38,6 +56,6 @@
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
