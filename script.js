@@ -6,6 +6,17 @@ import {
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ===== Conexión con Firebase =====
 const firebaseConfig = {
@@ -19,6 +30,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // ===== Elementos de la página =====
 const seccionAuth = document.getElementById("auth");
@@ -37,7 +49,7 @@ const totalEl = document.getElementById("total");
 
 let modoRegistro = false;
 let uidActual = null;
-let gastos = [];
+let dejarDeEscuchar = null;
 
 // ===== Login y registro =====
 cambiarAuth.addEventListener("click", function (e) {
@@ -89,66 +101,103 @@ onAuthStateChanged(auth, function (usuario) {
   if (usuario) {
     uidActual = usuario.uid;
     emailUsuario.textContent = usuario.email;
-    gastos = JSON.parse(localStorage.getItem("gastos_" + uidActual)) || [];
     seccionAuth.classList.add("oculto");
     seccionGastos.classList.remove("oculto");
     barraUsuario.classList.remove("oculto");
-    mostrar();
+    escucharGastos();
   } else {
     uidActual = null;
-    gastos = [];
+    if (dejarDeEscuchar) {
+      dejarDeEscuchar();
+      dejarDeEscuchar = null;
+    }
+    lista.innerHTML = "";
+    totalEl.textContent = "$0";
     seccionAuth.classList.remove("oculto");
     seccionGastos.classList.add("oculto");
     barraUsuario.classList.add("oculto");
   }
 });
 
-// ===== Gastos (guardados por usuario) =====
-function guardar() {
-  localStorage.setItem("gastos_" + uidActual, JSON.stringify(gastos));
+// ===== Gastos guardados en la nube =====
+// Cada usuario tiene su propia colección: usuarios / (su id) / gastos
+function coleccionGastos() {
+  return collection(db, "usuarios", uidActual, "gastos");
 }
 
-function mostrar() {
+// Se queda "escuchando": cada vez que cambia algo en la nube, redibuja la lista
+function escucharGastos() {
+  const consulta = query(coleccionGastos(), orderBy("creado", "desc"));
+
+  dejarDeEscuchar = onSnapshot(
+    consulta,
+    function (resultado) {
+      const gastos = resultado.docs.map(function (d) {
+        return { id: d.id, ...d.data() };
+      });
+      mostrar(gastos);
+    },
+    function (error) {
+      console.error(error);
+      alert("No se pudieron cargar los gastos (" + error.code + ").");
+    }
+  );
+}
+
+function mostrar(gastos) {
   lista.innerHTML = "";
   let total = 0;
 
-  gastos.forEach(function (gasto, indice) {
+  gastos.forEach(function (gasto) {
     total += gasto.monto;
 
     const li = document.createElement("li");
-    li.innerHTML = `
-      <div>
-        <strong>${gasto.descripcion}</strong>
-        <small>${gasto.categoria}</small>
-      </div>
-      <div>
-        <span>$${gasto.monto.toLocaleString("es-AR")}</span>
-        <button class="borrar" onclick="borrarGasto(${indice})">✕</button>
-      </div>
-    `;
+
+    const izquierda = document.createElement("div");
+    const nombre = document.createElement("strong");
+    nombre.textContent = gasto.descripcion;
+    const categoria = document.createElement("small");
+    categoria.textContent = gasto.categoria;
+    izquierda.append(nombre, categoria);
+
+    const derecha = document.createElement("div");
+    const monto = document.createElement("span");
+    monto.textContent = "$" + gasto.monto.toLocaleString("es-AR");
+    const borrar = document.createElement("button");
+    borrar.className = "borrar";
+    borrar.textContent = "✕";
+    borrar.addEventListener("click", function () {
+      borrarGasto(gasto.id);
+    });
+    derecha.append(monto, borrar);
+
+    li.append(izquierda, derecha);
     lista.appendChild(li);
   });
 
   totalEl.textContent = "$" + total.toLocaleString("es-AR");
 }
 
-// En módulos hay que colgar la función de "window" para que el onclick la encuentre
-window.borrarGasto = function (indice) {
-  gastos.splice(indice, 1);
-  guardar();
-  mostrar();
-};
+async function borrarGasto(id) {
+  try {
+    await deleteDoc(doc(db, "usuarios", uidActual, "gastos", id));
+  } catch (error) {
+    alert("No se pudo borrar el gasto (" + error.code + ").");
+  }
+}
 
-form.addEventListener("submit", function (evento) {
+form.addEventListener("submit", async function (evento) {
   evento.preventDefault();
 
-  gastos.push({
-    descripcion: document.getElementById("descripcion").value,
-    monto: parseFloat(document.getElementById("monto").value),
-    categoria: document.getElementById("categoria").value
-  });
-
-  guardar();
-  mostrar();
-  form.reset();
+  try {
+    await addDoc(coleccionGastos(), {
+      descripcion: document.getElementById("descripcion").value,
+      monto: parseFloat(document.getElementById("monto").value),
+      categoria: document.getElementById("categoria").value,
+      creado: serverTimestamp()
+    });
+    form.reset();
+  } catch (error) {
+    alert("No se pudo guardar el gasto (" + error.code + ").");
+  }
 });
