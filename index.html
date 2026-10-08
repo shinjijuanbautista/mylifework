@@ -7,54 +7,304 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>MyLifeWork</h1>
-    <p>Rutina, disciplina y trabajo, día a día.</p>
-    <div id="usuario-barra" class="oculto">
-      <span id="usuario-email"></span>
-      <button id="btn-salir" type="button">Salir</button>
+
+  <!-- ===== Pantalla de inicio de sesión ===== -->
+  <div id="pantalla-auth">
+    <header>
+      <h1>MyLifeWork</h1>
+      <p>Rutina, disciplina y trabajo, día a día.</p>
+    </header>
+
+    <main>
+      <section id="auth">
+        <h2 id="auth-titulo">Iniciar sesión</h2>
+        <form id="form-auth">
+          <input type="email" id="email" placeholder="Email" required>
+          <input type="password" id="password" placeholder="Contraseña (mínimo 6 caracteres)" minlength="6" required>
+          <button type="submit" id="auth-boton">Entrar</button>
+        </form>
+        <p id="auth-error" class="error"></p>
+        <p class="auth-cambio">
+          <span id="auth-texto">¿No tenés cuenta?</span>
+          <a href="#" id="auth-cambiar">Registrate</a>
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== La app (se ve solo con sesión iniciada) ===== -->
+  <div id="app" class="oculto">
+
+    <!-- Columna izquierda -->
+    <aside id="menu">
+      <div class="menu-logo">MyLifeWork</div>
+
+      <nav>
+        <button type="button" class="menu-item activo" data-vista="inicio">Inicio</button>
+        <button type="button" class="menu-item" data-vista="billetera">Billetera</button>
+
+        <!-- Inversiones con sus secciones desplegables -->
+        <div class="menu-grupo">
+          <div class="menu-fila">
+            <button type="button" class="menu-item" data-vista="inversiones" data-inv="todas">Inversiones</button>
+            <button type="button" class="menu-flecha" id="flecha-inversiones" aria-label="Mostrar u ocultar secciones de inversiones">▾</button>
+          </div>
+          <div class="submenu oculto" id="submenu-inversiones">
+            <button type="button" class="menu-subitem" data-vista="inversiones" data-inv="bursatil">Mercado bursátil</button>
+            <button type="button" class="menu-subitem" data-vista="inversiones" data-inv="cripto">Criptomonedas</button>
+            <button type="button" class="menu-subitem" data-vista="inversiones" data-inv="commodities">Commodities</button>
+            <button type="button" class="menu-subitem" data-vista="inversiones" data-inv="realestate">Real estate</button>
+            <button type="button" class="menu-subitem" data-vista="inversiones" data-inv="monedas">Monedas</button>
+            <button type="button" class="menu-subitem" data-vista="inversiones" data-inv="derivados">Derivados</button>
+          </div>
+        </div>
+
+        <!-- Calendario con sub-calendarios desplegables -->
+        <div class="menu-grupo">
+          <div class="menu-fila">
+            <button type="button" class="menu-item" data-vista="calendario" data-cal="todos">Calendario</button>
+            <button type="button" class="menu-flecha" id="flecha-calendario" aria-label="Mostrar u ocultar calendarios">▾</button>
+          </div>
+          <div class="submenu oculto" id="submenu-calendario">
+            <button type="button" class="menu-subitem" data-vista="calendario" data-cal="trabajo">Calendario de trabajo</button>
+            <button type="button" class="menu-subitem" data-vista="calendario" data-cal="estudio">Calendario de estudio</button>
+            <button type="button" class="menu-subitem" data-vista="calendario" data-cal="actividades">Calendario de actividades</button>
+            <button type="button" class="menu-subitem" data-vista="calendario" data-cal="trading">Calendario de trading</button>
+          </div>
+        </div>
+      </nav>
+
+      <div class="menu-usuario">
+        <span id="usuario-email"></span>
+        <button type="button" id="btn-salir">Salir</button>
+      </div>
+    </aside>
+
+    <!-- Contenido -->
+    <div id="contenido">
+
+      <!-- ===== INICIO ===== -->
+      <section id="vista-inicio" class="vista">
+        <h2>¡Bienvenido!</h2>
+        <p class="bienvenida-email" id="bienvenida-email"></p>
+        <p>Elegí una sección en el menú de la izquierda para empezar.</p>
+      </section>
+
+      <!-- ===== BILLETERA ===== -->
+      <section id="vista-billetera" class="vista oculto">
+        <h2>Billetera</h2>
+
+        <!-- Balance general: suma de todo, no cambia con el período -->
+        <div class="balance-general">
+          <span>Balance general</span>
+          <strong id="balance-general">$0</strong>
+          <small>Todo lo que cargaste, sin importar el período que estés viendo</small>
+        </div>
+
+        <div class="modo-botones">
+          <button type="button" class="modo-btn activo" data-modo="lista">Lista</button>
+          <button type="button" class="modo-btn" data-modo="calendario">Calendario</button>
+        </div>
+
+        <div class="periodo" id="bloque-periodo">
+          <div class="periodo-botones">
+            <button type="button" class="periodo-btn" data-periodo="dia">Día</button>
+            <button type="button" class="periodo-btn activo" data-periodo="semana">Semana</button>
+            <button type="button" class="periodo-btn" data-periodo="mes">Mes</button>
+            <button type="button" class="periodo-btn" data-periodo="anio">Año</button>
+            <button type="button" class="periodo-btn" data-periodo="rango">Fechas</button>
+          </div>
+
+          <div class="periodo-nav" id="periodo-nav">
+            <button type="button" id="periodo-anterior">◀</button>
+            <span id="periodo-etiqueta"></span>
+            <button type="button" id="periodo-siguiente">▶</button>
+          </div>
+
+          <div class="periodo-rango oculto" id="periodo-rango">
+            <label>Desde <input type="date" id="rango-desde"></label>
+            <label>Hasta <input type="date" id="rango-hasta"></label>
+          </div>
+        </div>
+
+        <div class="resumen">
+          <div class="resumen-caja">
+            <span>Ingresos</span>
+            <strong id="total-ingresos" class="ingreso">$0</strong>
+          </div>
+          <div class="resumen-caja">
+            <span>Gastos</span>
+            <strong id="total-gastos" class="gasto">$0</strong>
+          </div>
+          <div class="resumen-caja saldo">
+            <span>Saldo del período</span>
+            <strong id="total-saldo">$0</strong>
+          </div>
+        </div>
+
+        <form id="form-gasto">
+          <select id="tipo">
+            <option value="gasto">Gasto</option>
+            <option value="ingreso">Ingreso</option>
+          </select>
+          <input type="date" id="fecha" required>
+          <input type="text" id="descripcion" placeholder="Descripción (ej: Supermercado)" required>
+          <input type="number" id="monto" placeholder="Monto" min="0" step="0.01" required>
+          <select id="categoria">
+            <option>Comida</option>
+            <option>Transporte</option>
+            <option>Servicios</option>
+            <option>Ocio</option>
+            <option>Sueldo</option>
+            <option>Otros</option>
+          </select>
+          <select id="medio">
+            <option>Efectivo</option>
+            <option>Transferencia</option>
+            <option>Débito</option>
+            <option>Tarjeta de crédito</option>
+            <option>Billetera virtual</option>
+          </select>
+          <button type="submit">Agregar</button>
+        </form>
+
+        <ul id="lista-gastos"></ul>
+
+        <div id="calendario-gastos" class="oculto">
+          <div class="cal-nav">
+            <button type="button" id="cal-anterior">◀</button>
+            <span id="cal-etiqueta"></span>
+            <button type="button" id="cal-siguiente">▶</button>
+          </div>
+          <div class="cal-scroll">
+            <div class="cal-grid" id="cal-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== INVERSIONES ===== -->
+      <section id="vista-inversiones" class="vista oculto">
+        <h2 id="inv-titulo">Inversiones</h2>
+
+        <!-- Resumen por moneda (lo dibuja el script) -->
+        <div id="inv-resumen"></div>
+        <p class="inv-estado" id="inv-estado"></p>
+
+        <!-- Formulario para cargar una posición -->
+        <form id="form-inversion">
+          <select id="inv-categoria">
+            <option value="bursatil">Mercado bursátil</option>
+            <option value="cripto">Criptomonedas</option>
+            <option value="commodities">Commodities</option>
+            <option value="realestate">Real estate</option>
+            <option value="monedas">Monedas</option>
+            <option value="derivados">Derivados</option>
+          </select>
+          <input type="text" id="inv-nombre" placeholder="Nombre o ticker (ej: AAPL, Bitcoin, Dólar MEP)" required>
+          <input type="number" id="inv-cantidad" placeholder="Cantidad" min="0" step="any" required>
+          <input type="number" id="inv-precio" placeholder="Precio de compra (por unidad)" min="0" step="any" required>
+          <select id="inv-moneda">
+            <option value="USD">USD</option>
+            <option value="ARS">ARS</option>
+          </select>
+          <input type="date" id="inv-fecha" required>
+          <input type="text" id="inv-broker" placeholder="Broker, exchange o app (ej: Binance, IOL)">
+          <input type="text" id="inv-codigo" placeholder="Código de precio en vivo (opcional)">
+          <input type="number" id="inv-manual" placeholder="Precio actual manual (opcional)" min="0" step="any">
+          <button type="submit">Agregar inversión</button>
+        </form>
+        <p class="ayuda" id="inv-ayuda"></p>
+
+        <!-- Lista de posiciones -->
+        <div id="inv-lista"></div>
+      </section>
+
+      <!-- ===== CALENDARIO ===== -->
+      <section id="vista-calendario" class="vista oculto">
+        <h2 id="work-titulo">Calendario</h2>
+
+        <!-- Solo en el calendario de trading -->
+        <button type="button" id="btn-cargar-dia" class="btn-principal oculto">+ Cargar día de trading</button>
+
+        <!-- Formulario de actividades (no se ve en trading) -->
+        <form id="form-evento">
+          <input type="text" id="ev-titulo" placeholder="Actividad (ej: Reunión con cliente)" required>
+          <input type="date" id="ev-fecha" required>
+          <input type="time" id="ev-hora">
+          <select id="ev-calendario">
+            <option value="trabajo">Trabajo</option>
+            <option value="estudio">Estudio</option>
+            <option value="actividades">Actividades</option>
+            <option value="trading">Trading</option>
+          </select>
+          <label class="color-label">Color
+            <input type="color" id="ev-color" value="#2f7fbf">
+          </label>
+          <button type="submit">Agregar actividad</button>
+        </form>
+
+        <!-- Resumen del mes (solo en trading) -->
+        <div class="resumen oculto" id="trading-resumen">
+          <div class="resumen-caja">
+            <span>Resultado del mes</span>
+            <strong id="tr-total">US$0</strong>
+          </div>
+          <div class="resumen-caja">
+            <span>Días ganadores</span>
+            <strong id="tr-dias-g" class="ingreso">0</strong>
+          </div>
+          <div class="resumen-caja">
+            <span>Días perdedores</span>
+            <strong id="tr-dias-p" class="gasto">0</strong>
+          </div>
+        </div>
+
+        <div class="cal-nav">
+          <button type="button" id="work-anterior">◀</button>
+          <span id="work-etiqueta"></span>
+          <button type="button" id="work-siguiente">▶</button>
+        </div>
+        <div class="cal-scroll">
+          <div class="cal-grid" id="work-grid"></div>
+        </div>
+      </section>
+
     </div>
-  </header>
+  </div>
 
-  <main>
-    <section id="auth">
-      <h2 id="auth-titulo">Iniciar sesión</h2>
-      <form id="form-auth">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Contraseña (mínimo 6 caracteres)" minlength="6" required>
-        <button type="submit" id="auth-boton">Entrar</button>
-      </form>
-      <p id="auth-error" class="error"></p>
-      <p class="auth-cambio">
-        <span id="auth-texto">¿No tenés cuenta?</span>
-        <a href="#" id="auth-cambiar">Registrate</a>
-      </p>
-    </section>
-
-    <section id="gastos" class="oculto">
-      <h2>Gastos del mes</h2>
-
-      <div class="total">
-        <span>Total del mes</span>
-        <strong id="total">$0</strong>
+  <!-- ===== Panel de un día de trading ===== -->
+  <div id="modal-trading" class="modal oculto">
+    <div class="modal-caja">
+      <div class="modal-cab">
+        <h3 id="mt-titulo"></h3>
+        <button type="button" id="mt-cerrar" aria-label="Cerrar">✕</button>
       </div>
 
-      <form id="form-gasto">
-        <input type="text" id="descripcion" placeholder="Descripción (ej: Supermercado)" required>
-        <input type="number" id="monto" placeholder="Monto" min="0" step="0.01" required>
-        <select id="categoria">
-          <option>Comida</option>
-          <option>Transporte</option>
-          <option>Servicios</option>
-          <option>Ocio</option>
-          <option>Otros</option>
-        </select>
-        <button type="submit">Agregar gasto</button>
-      </form>
+      <form id="form-trading">
+        <input type="number" id="f-resultado" placeholder="Resultado en USD (ej: 70 o -30)" step="0.01" required>
+        <input type="number" id="f-trades" placeholder="Trades" min="0" step="1">
+        <input type="number" id="f-wins" placeholder="Ganados" min="0" step="1">
+        <input type="number" id="f-losses" placeholder="Perdidos" min="0" step="1">
+        <textarea id="f-nota" rows="3" placeholder="Nota del día (ej: falló la entrada de VWAP)"></textarea>
 
-      <ul id="lista-gastos"></ul>
-    </section>
-  </main>
+        <label class="foto-label">
+          Agregar fotos del trade (máximo 3)
+          <input type="file" id="f-fotos" accept="image/*" multiple>
+        </label>
+        <div class="previews" id="f-previews"></div>
+
+        <div class="modal-botones">
+          <button type="submit">Guardar día</button>
+          <button type="button" id="mt-borrar" class="secundario oculto">Borrar día</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Visor de fotos -->
+  <div id="visor" class="oculto">
+    <img id="visor-img" alt="Foto del trade">
+  </div>
 
   <script type="module" src="script.js"></script>
 </body>
